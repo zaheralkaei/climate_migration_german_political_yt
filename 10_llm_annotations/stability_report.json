@@ -1,0 +1,38 @@
+{
+  "metadata": {
+    "n_sampled": 200,
+    "n_compared": 200,
+    "seed": 42,
+    "run1_source": "10_llm_annotations\\llm_annotated_subset.jsonl",
+    "run2_source": "10_llm_annotations\\stability_run2.jsonl",
+    "model": "claude-opus-4-6",
+    "computed_at": "2026-09-24T00:52:56.820597+00:00"
+  },
+  "interaction": {
+    "n": 199,
+    "exact_agreement_pct": 93.0,
+    "kappa_quadratic": 0.9064,
+    "kappa_unweighted": 0.908,
+    "mae": 0.0729
+  },
+  "stance_child": {
+    "n": 200,
+    "exact_agreement_pct": 96.0,
+    "kappa_unweighted": 0.9295
+  },
+  "stance_parent": {
+    "n": 200,
+    "exact_agreement_pct": 98.0,
+    "kappa_unweighted": 0.9656
+  },
+  "stance_pooled": {
+    "n": 400,
+    "exact_agreement_pct": 97.0,
+    "kappa_unweighted": 0.9484
+  },
+  "techniques": {
+    "n": 200,
+    "exact_set_agreement_pct": 79.5,
+    "mean_jaccard": 0.8826
+  }
+}

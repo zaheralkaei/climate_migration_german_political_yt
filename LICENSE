@@ -1,0 +1,98 @@
+Climate and Migration on German Political Party YouTube
+A Corpus with Stance, Propaganda, and Divisiveness Annotation
+
+Copyright (c) 2026 Zaher Alkaei, Manfred Stede, Christoph Maximilian Abels
+University of Potsdam
+
+This repository contains three kinds of material, covered by different terms.
+Please read all three sections.
+
+-------------------------------------------------------------------------------
+1. ANNOTATIONS AND DERIVED DATA  --  CC BY-NC 4.0
+-------------------------------------------------------------------------------
+
+The annotation layers we created, and every file derived from them, are licensed
+under the Creative Commons Attribution-NonCommercial 4.0 International license
+(CC BY-NC 4.0). This covers:
+
+  - interaction-quality scores and labels
+  - parent and child stance labels
+  - propaganda-technique label sets
+  - thread-level aggregate scores and quality bins
+  - the annotation guidelines, system prompts and few-shot sets
+  - the inter-annotator agreement, evaluation and topic-validation reports
+  - topic assignments and all aggregate statistics
+
+You may share and adapt this material for non-commercial purposes, with
+attribution. Full license text:
+
+  https://creativecommons.org/licenses/by-nc/4.0/legalcode
+  Summary: https://creativecommons.org/licenses/by-nc/4.0/
+
+-------------------------------------------------------------------------------
+2. SOURCE CODE  --  MIT
+-------------------------------------------------------------------------------
+
+All Python code in this repository (the numbered pipeline steps, the annotation
+and reconciliation tools, and the reporting scripts) is licensed under the MIT
+license, so that the pipeline can be reused without the non-commercial
+restriction that applies to the data.
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to deal
+  in the Software without restriction, including without limitation the rights
+  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  SOFTWARE.
+
+-------------------------------------------------------------------------------
+3. UNDERLYING COMMENT AND VIDEO TEXT  --  NOT OURS TO LICENSE
+-------------------------------------------------------------------------------
+
+The comment text, video titles and transcript material in this repository were
+posted by third parties on YouTube. Copyright in that content remains with its
+respective authors. We do not and cannot grant any license over it. It is
+redistributed here in pseudonymized form for non-commercial academic research
+only, and its use remains subject to the YouTube Terms of Service and to
+applicable law, including the research exceptions of the EU DSM Directive
+(Art. 3) and German UrhG Sec. 60d.
+
+All author names have been replaced with sequential pseudonyms
+(User_00001, User_00002, ...), including inside @-mentions. No usernames,
+handles, channel subscriber identities or author profile metadata are included.
+Do not attempt to re-identify comment authors, and do not use this material to
+target, profile or contact any individual.
+
+-------------------------------------------------------------------------------
+REMOVAL REQUESTS
+-------------------------------------------------------------------------------
+
+If you are the author of a comment included in this corpus and you want it
+removed, or if you have any other concern about the data, write to:
+
+  alkaei@uni-potsdam.de
+
+Please quote the pair identifier (PairID) if you have it, or the comment text.
+We will remove the record and publish an updated release.
+
+-------------------------------------------------------------------------------
+CITATION
+-------------------------------------------------------------------------------
+
+If you use this corpus, please cite the accompanying paper:
+
+  Zaher Alkaei, Manfred Stede, and Christoph Maximilian Abels. 2026.
+  Climate and Migration on German Political Party YouTube: A Corpus with
+  Stance, Propaganda, and Divisiveness Annotation. In Proceedings of the
+  ClimateNLP Workshop.

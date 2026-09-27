@@ -1,0 +1,263 @@
+======================================================================
+PAPER NUMBERS (supplement to overview_report.txt)
+Generated: 2026-09-27T13:28:40.089519+00:00
+pairs=7277  threads=2000
+======================================================================
+
+======================================================================
+1. Sec 3.5  eligible-thread pool
+======================================================================
+   climate_AfD            9839  (24.7%)
+   climate_Linke           723  (1.8%)
+   migration_AfD         26704  (67.0%)
+   migration_Linke        2595  (6.5%)
+   total eligible threads      39861
+   from AfD channels           36543  (91.7%)   <- paper: 91.7%
+   smallest stratum (climate x Linke) 723  (1.8%)  <- paper: 723 / 1.8%
+
+======================================================================
+2. Table 4  gold-standard label distribution (n=700)
+======================================================================
+   IQ CD   155   22.1%
+   IQ CA    69    9.9%
+   IQ N    119   17.0%
+   IQ DA   160   22.9%
+   IQ DD   197   28.1%
+   stance Support    54    7.7%
+   stance Neutral   568   81.1%
+   stance Against    78   11.1%
+   top technique Loaded_Language 332  47.4%   <- paper: Loaded_Language 332 / 47.4%
+
+======================================================================
+3. Table 6  LLM vs gold  (10_llm_annotations/evaluation_report.json)
+======================================================================
+   IQ      quad=0.560 unweighted=0.550 MAE=0.366 r=0.560
+   child   kappa=0.428 macroF1=0.615 F1=0.515/0.791/0.537
+   parent  kappa=0.435 macroF1=0.645 F1=0.544/0.761/0.631 n=700
+   prop    macroF1=0.4601 hamming=0.1180
+
+======================================================================
+4. Tables 7 & 8  thread-quality bins
+======================================================================
+   Constructive               412   20.6%
+   Slight/Neutral             487   24.4%
+   Moderately Destructive     829   41.5%
+   Highly Destructive         272   13.6%
+   total threads 2000
+
+   climxAfD   n= 500 Cons=12.8 Slig=23.6 Mode=54.0 High= 9.6  mean=-0.283
+   climxLinke n= 500 Cons=31.6 Slig=26.6 Mode=26.0 High=15.8  mean=-0.077
+   migrxAfD   n= 500 Cons=10.6 Slig=20.0 Mode=59.8 High= 9.6  mean=-0.325
+   migrxLinke n= 500 Cons=27.4 Slig=27.2 Mode=26.0 High=19.4  mean=-0.129
+
+======================================================================
+5. Table 9  pair-level IQ + child stance per stratum
+======================================================================
+   climxAfD   n= 1999 CD= 301 CA=  89 N= 257 DA= 916 DD= 436 | Ag= 596 Ne=1262 Su= 141 miss=0
+       stance%  Against=29.8 Neutral=63.1 Support=7.1
+   climxLinke n= 1420 CD= 387 CA= 156 N= 244 DA= 251 DD= 382 | Ag= 152 Ne=1034 Su= 234 miss=0
+       stance%  Against=10.7 Neutral=72.8 Support=16.5
+   migrxAfD   n= 1984 CD= 244 CA=  69 N= 241 DA=1081 DD= 349 | Ag=1126 Ne= 745 Su= 113 miss=0
+       stance%  Against=56.8 Neutral=37.6 Support=5.7
+   migrxLinke n= 1874 CD= 552 CA= 139 N= 249 DA= 315 DD= 619 | Ag= 487 Ne= 973 Su= 414 miss=0
+       stance%  Against=26.0 Neutral=51.9 Support=22.1
+
+======================================================================
+6. Table 10  agreement/style axis collapse (% of pairs)
+======================================================================
+   climxAfD   agree= 50.3 disag= 36.9 constr= 19.5 destr= 67.6 neut= 12.9
+   climxLinke agree= 28.7 disag= 54.2 constr= 38.2 destr= 44.6 neut= 17.2
+   migrxAfD   agree= 58.0 disag= 29.9 constr= 15.8 destr= 72.1 neut= 12.1
+   migrxLinke agree= 24.2 disag= 62.5 constr= 36.9 destr= 49.8 neut= 13.3
+
+======================================================================
+7. Table 11 (per stratum) & Table 16 (corpus-wide) technique prevalence
+======================================================================
+   Loaded_Language                         3632   49.9%
+   Name_Calling,Labeling                   2542   34.9%
+   Exaggeration,Minimisation               1897   26.1%
+   Appeal_to_fear-prejudice                 862   11.8%
+   Causal_Oversimplification                856   11.8%
+   Doubt                                    837   11.5%
+   Slogans/Thought-terminating_Cliches      707    9.7%
+   Flag-Waving                              524    7.2%
+   Black-and-White_Fallacy                  340    4.7%
+   Appeal_to_Time                           300    4.1%
+   Repetition                               229    3.1%
+   Appeal_to_Authority                      226    3.1%
+   Whataboutism,Straw_Men                   222    3.1%
+   Bandwagon,Reductio_ad_hitlerum           167    2.3%
+
+   climxAfD   (n=1999): Loaded_Language=51.9%, Name_Calling,Labeling=38.8%, Exaggeration,Minimisation=25.2%, Appeal_to_fear-prejudice=11.8%
+   climxLinke (n=1420): Loaded_Language=44.2%, Name_Calling,Labeling=30.0%, Exaggeration,Minimisation=25.0%, Appeal_to_fear-prejudice=6.5%
+   migrxAfD   (n=1984): Loaded_Language=53.6%, Name_Calling,Labeling=34.2%, Exaggeration,Minimisation=26.3%, Appeal_to_fear-prejudice=17.4%
+   migrxLinke (n=1874): Loaded_Language=48.2%, Name_Calling,Labeling=35.3%, Exaggeration,Minimisation=27.6%, Appeal_to_fear-prejudice=10.0%
+
+======================================================================
+8. Table 12  stance relation by topic (same-stance decomposed)
+======================================================================
+   CLIMATE
+      opposing     n=  340 mean=+0.079 C/D=53/46
+      same         n= 2276 mean=-0.195 C/D=24/59
+      one-neutral  n=  803 mean=-0.217 C/D=25/61
+        Against-Against  n=  401 mean=-0.387 C/D=9/88
+        Neutral-Neutral  n= 1780 mean=-0.169 C/D=26/53
+        Support-Support  n=   95 mean=+0.126 C/D=55/40
+   MIGRATION
+      opposing     n=  583 mean=-0.072 C/D=45/54
+      same         n= 2377 mean=-0.236 C/D=21/65
+      one-neutral  n=  898 mean=-0.182 C/D=27/57
+        Against-Against  n= 1028 mean=-0.412 C/D=9/87
+        Neutral-Neutral  n= 1263 mean=-0.110 C/D=29/48
+        Support-Support  n=   86 mean=+0.035 C/D=47/49
+
+======================================================================
+9. Table 20  stance relation per party x topic
+======================================================================
+   climate x AfD
+      opposing     mean=+0.042 C/D=51/48 n=179
+      same         mean=-0.314 C/D=15/71 n=1304
+      one-neutral  mean=-0.283 C/D=19/67 n=516
+   climate x Linke
+      opposing     mean=+0.121 C/D=55/45 n=161
+      same         mean=-0.034 C/D=36/43 n=972
+      one-neutral  mean=-0.099 C/D=36/50 n=287
+   migration x AfD
+      opposing     mean=-0.114 C/D=43/55 n=132
+      same         mean=-0.343 C/D=12/77 n=1425
+      one-neutral  mean=-0.251 C/D=20/62 n=427
+   migration x Linke
+      opposing     mean=-0.060 C/D=45/53 n=451
+      same         mean=-0.075 C/D=35/47 n=952
+      one-neutral  mean=-0.120 C/D=33/52 n=471
+
+======================================================================
+10. Tables 13 & 19  constructive-thread share by year
+======================================================================
+   climate   2019:28.9%(n45)  2020:11.8%(n68)  2021:23.1%(n104)  2022:11.9%(n151)  2023:7.0%(n129)  2024:34.2%(n73)  2025:28.5%(n361)  2026:25.0%(n60)
+   migration 2019:7.0%(n43)  2020:6.8%(n73)  2021:12.8%(n47)  2022:14.3%(n56)  2023:8.9%(n123)  2024:19.3%(n228)  2025:27.0%(n352)  2026:24.6%(n65)
+
+   climxAfD   2018:33.3(n3)  2019:19.4(n36)  2020:9.1(n66)  2021:19.3(n88)  2022:11.3(n142)  2023:7.0(n86)  2024:20.7(n29)  2025:11.4(n44)  2026:0.0(n6)
+   climxLinke 2017:100.0(n3)  2018:100.0(n3)  2019:66.7(n9)  2020:100.0(n2)  2021:43.8(n16)  2022:22.2(n9)  2023:7.0(n43)  2024:43.2(n44)  2025:30.9(n317)  2026:27.8(n54)
+   migrxAfD   2018:0.0(n10)  2019:4.9(n41)  2020:6.8(n73)  2021:9.8(n41)  2022:9.4(n53)  2023:8.5(n118)  2024:13.7(n95)  2025:21.0(n62)  2026:14.3(n7)
+   migrxLinke 2016:100.0(n1)  2017:50.0(n2)  2019:50.0(n2)  2021:33.3(n6)  2022:100.0(n3)  2023:20.0(n5)  2024:23.3(n133)  2025:28.3(n290)  2026:25.9(n58)
+
+======================================================================
+11. Sec 5.2  chi-square, thread-quality distribution by topic
+======================================================================
+   climate   Cons=222 Slig=251 Mode=400 High=127  n=1000
+   migration Cons=190 Slig=236 Mode=429 High=145  n=1000
+   chi2(3) = 5.1531    <- paper: 5.15
+   scipy: chi2=5.1531 dof=3 p=0.1609    <- paper: p = 0.16
+
+======================================================================
+12. Sec 5.1  Doubt / Fear by topic; climate skepticism
+======================================================================
+   climate   n=3419 Doubt=13.6% Fear=9.6%
+   migration n=3858 Doubt=9.7% Fear=13.8%
+   climate x AfD   Against=596/1999 = 29.8%
+   climate x Linke Against=152/1420 = 10.7%
+
+======================================================================
+13. Limitations 4  style-only recoding robustness
+======================================================================
+   CLIMATE
+      opposing     style-only mean=+0.065   (original +0.079)
+      same         style-only mean=-0.347   (original -0.195)
+      one-neutral  style-only mean=-0.354   (original -0.217)
+   MIGRATION
+      opposing     style-only mean=-0.087   (original -0.072)
+      same         style-only mean=-0.438   (original -0.236)
+      one-neutral  style-only mean=-0.300   (original -0.182)
+
+======================================================================
+14. Limitations 5  sample composition by year
+======================================================================
+   2018  AfD=   51 Linke=    4  AfD share=92.7%  Linke share=7.3%
+   2019  AfD=  335 Linke=   34  AfD share=90.8%  Linke share=9.2%
+   2020  AfD=  766 Linke=    5  AfD share=99.4%  Linke share=0.6%
+   2021  AfD=  624 Linke=   52  AfD share=92.3%  Linke share=7.7%
+   2022  AfD=  787 Linke=   88  AfD share=89.9%  Linke share=10.1%
+   2023  AfD=  544 Linke=  142  AfD share=79.3%  Linke share=20.7%
+   2024  AfD=  451 Linke=  579  AfD share=43.8%  Linke share=56.2%
+   2025  AfD=  400 Linke= 2007  AfD share=16.6%  Linke share=83.4%
+   2026  AfD=   25 Linke=  342  AfD share=6.8%  Linke share=93.2%
+   <- paper: 2020 is 99% AfD, 2025 is 83% Die Linke
+
+======================================================================
+15. Appendix  annotator A vs Z
+======================================================================
+   n=700  mean A=-0.183  mean Z=-0.057
+   CD: A=140 Z=141  CA: A=65 Z=98  N: A=121 Z=143  DA: A=147 Z=176  DD: A=227 Z=142
+   exact=56.9%  style-axis=63.4%  relation-axis=67.9%
+   top disagreements A->Z: DD->CD:45, N->CA:36, CD->N:34
+   gap climate   = -0.1043 (n=350)
+   gap migration = -0.1471 (n=350)
+   offset stable across category: Welch t=0.777 p=0.4374    <- paper: p = 0.44
+   gap AfD       = -0.0857 (n=350)
+   gap Linke     = -0.1657 (n=350)
+   offset stable across party: Welch t=1.452 p=0.1470    <- paper: p = 0.15
+   techniques per pair: A=1.46  Z=1.76
+
+======================================================================
+16. Appendix  topic-assignment validation
+======================================================================
+   assigned videos n=60  on-topic=45 = 75.0%   <- paper: 75.0%
+     climate    21/30 = 70.0%
+     migration  24/30 = 80.0%
+   unassigned videos n=15  actually on-topic=1
+   pairs from the 75 judged videos: 393
+     on-topic (C/M/B)   n= 302  Neutral child=55.0%  opposing pairs=27
+     off-topic (N)      n=  91  Neutral child=80.2%  opposing pairs=0
+   opposing-stance pairs from these videos: 27    <- paper: 27, none from off-topic videos
+
+======================================================================
+17. Ethics  party-aware human vs party-blind LLM labels
+======================================================================
+   mean human-minus-LLM AfD    = +0.0129 (n=350)
+   mean human-minus-LLM Linke  = -0.0500 (n=350)
+   difference = 0.0629    <- paper: 0.063 on a [-1,+1] scale
+   Welch t=1.185 p=0.2364    <- paper: t = 1.19, p = 0.24
+   destructive share of AfD pairs, party-blind LLM  = 67.4%   <- paper: 67.4%
+   destructive share of AfD pairs, human annotators = 58.3%   <- paper: 58.3%
+
+======================================================================
+18. Table 2 (sampling yield) & Sec 4.3 adjudication split
+======================================================================
+   stratum          threads  comments  pairs(pre-dedup)  pairs(clean)
+   climate_AfD          500      2632              1999          1999
+   climate_Linke        500      2204              1442          1420
+   migration_AfD        500      2691              1984          1984
+   migration_Linke      500      2683              1874          1874
+   TOTAL               2000     10210              7299          7277
+   duplicates removed: 22    <- paper: 7,299 pairs, 22 duplicates, 7,277 clean
+   <- paper Table 2: threads 2,000  comments 10,210  clean pairs 7,277
+   gold pairs = 700
+   identical on all three tasks     75  10.7%   <- paper: 75 / 10.7%
+   adjudicated by discussion       625  89.3%   <- paper: 625 / 89.3%
+
+======================================================================
+19. Sec 4.4  LLM stability (self-consistency) check
+======================================================================
+   sample n=200 (seed 42)  compared=200  model=claude-opus-4-6
+   interaction  exact=93.0%   <- paper: 93.0%
+                quad-weighted kappa=0.9064   <- paper: 0.906
+   stance (child)   exact=96.0% kappa=0.9295   <- paper: 96.0% / 0.930
+   stance (parent)  exact=98.0% kappa=0.9656
+   stance (pooled)  exact=97.0% kappa=0.9484
+
+======================================================================
+20. Sec 5.1  same-stance decomposition (NN masking; AfD severity vs volume)
+======================================================================
+   climate   same=-0.195 (n=2276)  NN=-0.169 (n=1780)  same without NN=-0.288
+   migration same=-0.236 (n=2377)  NN=-0.110 (n=1263)  same without NN=-0.378
+   <- paper: excluding NN the same-stance mean falls to -0.29 climate / -0.38 migration
+
+   climate x AfD   same-stance n=1304  AA: 29.1% @ -0.404  NN: 70.1% @ -0.282  SS: 0.8% @ +0.150
+   climate x Linke same-stance n=972  AA: 2.2% @ -0.071  NN: 89.1% @ -0.049  SS: 8.7% @ +0.124
+   gap AfD-Linke = -0.280   composition explains 7%, severity explains 76%
+   <- paper: every configuration is harsher on AfD; NN alone -0.28 vs -0.05
+
+   climate   opposing mean=+0.079 n=340 se=0.0529  95% CI [-0.024,+0.183]  excludes 0: False
+   migration opposing mean=-0.072 n=583 se=0.0404  95% CI [-0.151,+0.007]  excludes 0: False
+   climate vs migration opposing: Welch t=2.277 p=0.0231    <- paper: t = 2.28, p = 0.02

@@ -1,0 +1,12 @@
+pairs from the 75 judged videos: 393
+
+group                   pairs  %Neutral child   %opposing    %same   mean IQ
+on-topic (C/M/B)          302           55.0%        8.9%    64.9%    -0.260
+off-topic (N)              91           80.2%        0.0%    73.6%    -0.346
+
+opposing-stance pairs from these videos: 27
+   from on-topic videos : 27 (100.0%)
+   from off-topic videos: 0 (0.0%)
+
+pair-weighted off-topic share: 91/393 = 23.2%
+(video-level off-topic rate was 25.0%)

@@ -1,0 +1,35 @@
+judged: 75 of 75
+
+judgment distribution: {'C': 20, 'N': 29, 'M': 23, 'B': 3}
+
+================================================================
+PRECISION -- videos assigned to climate/migration (n=60)
+================================================================
+  topically relevant (C/M/B, not N/U) :  45/60  = 75.0%
+  assigned label accepted (match or B):  45/60  = 75.0%
+  strict match (exact label, B counts as miss):  43/60 = 71.7%
+    climate   : 21/30 accepted (70.0%)
+    migration : 24/30 accepted (80.0%)
+
+  flagged N/U (15):
+    [ 2] N  assigned=climate   Der Elefant im Raum: Stuttgart 21, Lars Haise - AfD-Fraktion im Bu
+    [ 3] N  assigned=climate   „Sie wollen die Beteiligung der Bürger ausschalten!“ - Dirk Spanie
+    [10] N  assigned=climate   „Plötzlich und unerwartet…!“ #bundestag #afdfraktion #plötzlichund
+    [13] N  assigned=migration DAS ist unsere Spitzenkandidatin Für Berlin!
+    [22] N  assigned=climate   Dieses Gesetz ist für das Land eine Katastrophe! Dr. Dirk Spaniel 
+    [26] N  assigned=migration Sanktionen gegen Weißrussland sind völlig sinnlos! - Dr. Anton Fri
+    [30] N  assigned=climate   Corona-Diktatur auf Widerruf ist keine Lösung! - Alexander Gauland
+    [33] N  assigned=climate   Man lernt als Beifahrer kein Autofahren! - Andreas Mrosek - AfD-Fr
+    [36] N  assigned=climate   🚆Fahrgastrechte: Auch hier herrscht wieder Ampel-Chaos! Wolfgang W
+    [51] N  assigned=migration Bernd Baumann holt zur Generalabrechnung mit CDU/CSU aus! - AfD-Fr
+    [58] N  assigned=climate   Deutschland wird zum Entwicklungsland! Mike Moncsek & René Bochman
+    [71] N  assigned=climate   Mogelpackung Gaspreisanpassung: Wo ist hier die Entlastung? Marc B
+    [72] N  assigned=migration Kurt Kleinschmidt: 💙 Der Kontakt zu den Menschen ist Schwerpunkt m
+    [73] N  assigned=migration Lohnt sich Arbeit überhaupt noch? - Jörg Schneider - AfD-Bürgerdia
+    [75] N  assigned=migration Freitag, 07.12., 17.00 Uhr: "Generation EU und Du?"
+
+================================================================
+MISSED CONTENT -- videos left as 'other' (n=15)
+================================================================
+  actually climate/migration: 1/15 = 6.7%
+    [66] B  "Europa neu gedacht!" mit Alice Weidel u.v.m. - live aus Kirchheimbola
