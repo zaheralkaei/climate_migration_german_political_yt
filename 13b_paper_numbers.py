@@ -29,6 +29,15 @@ L = []
 def w(s=""): L.append(s)
 def head(n, title): w("\n" + "=" * 70); w(f"{n}. {title}"); w("=" * 70)
 
+# Every value printed with a "<- paper:" annotation used to be checked by eye, so a
+# number could drift out of step with the paper without the script noticing. chk()
+# compares against the published value and makes the run fail instead.
+CHECKS = []
+def chk(label, got, want, tol=0.05):
+    ok = got is not None and abs(float(got) - float(want)) <= tol
+    CHECKS.append((ok, label, got, want))
+    return ok
+
 # loaders
 def video_map():
     vm = {}; csv.field_size_limit(10 ** 7)
@@ -291,7 +300,7 @@ try:
     w("   top disagreements A->Z: " + ", ".join(f"{k[0]}->{k[1]}:{v}" for k, v in dc.most_common(3)))
     # A-minus-Z offset, split by topic and by party. The paper claims the offset
     # is a uniform strictness threshold, not a content-linked bias, so the two
-    # halves of each split must not differ significantly (Appendix, Sec iaa).
+    # halves of each split must not differ significantly.
     def gap(field, value):
         return [float(A[p]["InteractionScore"]) - float(Z[p]["InteractionScore"])
                 for p in ids if G[p].get(field) == value]
@@ -337,7 +346,7 @@ try:
     # Off-topic impact on the stance layer (Appendix): pairs drawn from the same
     # 75 judged videos, split by whether the judge found the video on-topic.
     # The paper argues off-topic videos inflate Neutral but contribute no
-    # opposing-stance pairs, so error hits Sec 5.1 counts, not the relation analysis.
+    # opposing-stance pairs.
     judged = {vid_of[i]: (j in ("C", "M", "B")) for i, j, _ in rows}
     grp = {True: [], False: []}
     for r in pairs:
@@ -392,8 +401,7 @@ except Exception as e:
 # 18 Table 2 and Sec 4.3 residual values
 head(18, "Table 2 (sampling yield) & Sec 4.3 adjudication split")
 # Table 2's Clean Pairs column is POST-deduplication, whereas sample_summary.csv
-# records the pre-dedup yield. Both appear in the paper (Sec 3.5 narrates
-# 7,299 -> minus 22 duplicates -> 7,277), so print the two side by side.
+# records the pre-dedup yield. 
 try:
     pre = {}
     with open("08_pairs/sample_summary.csv", encoding="utf-8") as f:
@@ -458,11 +466,9 @@ else:
     w("   Regenerate with:  python 10b_stability_check.py --run")
     w("   (requires ANTHROPIC_API_KEY; ~800 API calls for the 200-pair sample)")
 
-# 20  Sec 5.1 same-stance decomposition claims
+# 20  Sec 5.1 same-stance decomposition 
 head(20, "Sec 5.1  same-stance decomposition (NN masking; AfD severity vs volume)")
-# The paper argues (a) Neutral-Neutral's volume MASKS how hostile same-stance is,
-# so excluding it the mean falls; and (b) the AfD/Linke same-stance gap is not a
-# composition effect but a severity one. Both need counterfactuals, not just means.
+
 try:
     for t_ in TOPICS:
         sub = [r for r in pairs if tp(r)[0] == t_ and rel(r) == "same"
@@ -495,9 +501,34 @@ try:
     gap = mA - mL
     w(f"   gap AfD-Linke = {gap:+.3f}   composition explains {(comp-mL)/gap*100:.0f}%,"
       f" severity explains {(sevr-mL)/gap*100:.0f}%")
-    w(f"   <- paper: every configuration is harsher on AfD; NN alone -0.28 vs -0.05")
+    w(f"   <- paper: Against-Against and Neutral-Neutral are both harsher on AfD;"
+      f" NN alone -0.28 vs -0.05")
 
-    # Sec 5.1 also claims the climate/migration OPPOSING means differ significantly.
+
+    w("")
+    for t_ in TOPICS:
+        cellmeans = {}
+        for p_ in PARTIES:
+            for c in cells:
+                g = [float(r["InteractionScore"]) for r in pairs
+                     if tp(r) == (t_, p_) and r.get("ParentStanceLabel") == c
+                     and r.get("StanceLabel") == c and r.get("InteractionScore") is not None]
+                cellmeans[(p_, c)] = (sum(g) / len(g), len(g)) if g else (None, 0)
+        for c in cells:
+            (a_, na), (l_, nl) = cellmeans[("AfD", c)], cellmeans[("Linke", c)]
+            if a_ is None or l_ is None:
+                continue
+            harsher = a_ < l_
+            w(f"   {t_:9} {cells[c]}  AfD={a_:+.3f} (n={na:4})  Linke={l_:+.3f} (n={nl:4})"
+              f"   harsher on AfD: {'yes' if harsher else 'NO'}")
+
+            if cells[c] in ("AA", "NN"):
+                CHECKS.append((harsher, f"Sec 5.1 {t_} {cells[c]} harsher on AfD",
+                               f"{a_:+.3f} vs {l_:+.3f}", "AfD lower"))
+    w("   <- paper names only Against-Against and Neutral-Neutral here;"
+      " Support-Support is the exception and is deliberately not claimed")
+
+    # Sec 5.1 asserts that the climate/migration OPPOSING means differ significantly.
     # The individual means are not distinguishable from zero, so the inferential
     # weight sits on this contrast, not on either point estimate.
     w("")
@@ -522,6 +553,222 @@ try:
 except Exception as e:
     w(f"   (unavailable: {e})")
 
+# 21 Sec 3.1 collection counts
+head(21, "Sec 3.1  collection counts (counted from the raw stage outputs)")
+vid = {}
+for coll, party in (("data_a_b", "AfD"), ("data_c_d", "Linke")):
+    p = Path(coll) / "01_channel_videos" / "combined_videos.csv"
+    if not p.exists():
+        w(f"   {p}: ABSENT"); continue
+    with open(p, encoding="utf-8") as f:
+        vid[party] = {r["videoId"] for r in csv.DictReader(f)}
+    w(f"   {party:5} videos = {len(vid[party]):6}")
+if len(vid) == 2:
+    tot = len(vid["AfD"]) + len(vid["Linke"])
+    w(f"   total videos = {tot}    <- paper: 14,280 (10,856 AfD; 3,424 Die Linke)")
+    chk("Sec 3.1 videos total", tot, 14280, 0)
+    chk("Sec 3.1 videos AfD", len(vid["AfD"]), 10856, 0)
+    chk("Sec 3.1 videos Linke", len(vid["Linke"]), 3424, 0)
+
+# The comment count walks every scraped file
+if os.environ.get("SKIP_SLOW_CHECKS"):
+    w("   comments: skipped (SKIP_SLOW_CHECKS set)")
+else:
+    nc = 0
+    for coll in ("data_a_b", "data_c_d"):
+        for fp in glob.glob(os.path.join(coll, "02_raw_scraped", "comments_*.jsonl")):
+            with open(fp, encoding="utf-8") as f:
+                nc += sum(1 for line in f if line.strip())
+    w(f"   total comments = {nc}    <- paper: 4,638,722")
+    chk("Sec 3.1 comments total", nc, 4638722, 0)
+
+tpath = Path("06_bertopic_output/video_topics.csv")
+if tpath.exists():
+    with open(tpath, encoding="utf-8") as f:
+        ntr = sum(1 for _ in csv.DictReader(f))
+    w(f"   transcripts modeled = {ntr}    <- paper: 12,621")
+    chk("Sec 3.1 transcripts", ntr, 12621, 0)
+
+# 22 Sec 3.2 pseudonymization
+head(22, "Sec 3.2  pseudonymized author identities per party namespace")
+maps = {"AfD": Path("data_a_b/03_anonymized/username_map.json"),
+        "Linke": Path("data_c_d/03_anonymized/username_map.json")}
+if all(p.exists() for p in maps.values()):
+    ns = {k: set(json.load(open(p, encoding="utf-8"))) for k, p in maps.items()}
+    a, l = len(ns["AfD"]), len(ns["Linke"])
+    both = len(ns["AfD"] & ns["Linke"])
+    w(f"   AfD namespace   = {a}")
+    w(f"   Linke namespace = {l}")
+    w(f"   sum (author-party pairs) = {a + l}    <- paper: 476,330 / 386,213 / 90,117")
+    w(f"   display names in both namespaces = {both}  ->  distinct names = {len(ns['AfD'] | ns['Linke'])}")
+    chk("Sec 3.2 AfD namespace", a, 386213, 0)
+    chk("Sec 3.2 Linke namespace", l, 90117, 0)
+    chk("Sec 3.2 total identities", a + l, 476330, 0)
+
+# 23 Table 14 corpus composition
+head(23, "Table 14  topic-relevant composition (report arithmetic + paper totals)")
+sp = Path("08_pairs/statistics_report.csv")
+if sp.exists():
+    with open(sp, encoding="utf-8") as f:
+        rows = list(csv.DictReader(f))
+    COLS = ("videos", "comments", "threads", "pairs")
+    chan = [r for r in rows if r["channel"] not in ("SUBTOTAL", "")]
+    subs = [r for r in rows if r["channel"] == "SUBTOTAL"]
+    total = [r for r in rows if r["category"] == "TOTAL"]
+    # each subtotal must equal the sum of its own channels, and the total the subtotals
+    for s in subs:
+        mine = [r for r in chan if r["category"] == s["category"] and r["party"] == s["party"]]
+        for c in COLS:
+            got = sum(int(r[c]) for r in mine)
+            chk(f"Table 14 subtotal {s['category'][:4]}x{s['party']} {c}", got, int(s[c]), 0)
+    if total:
+        for c in COLS:
+            got = sum(int(r[c]) for r in subs)
+            w(f"   total {c:9} = {got:8}  (report says {int(total[0][c]):8})")
+            chk(f"Table 14 total {c}", got, int(total[0][c]), 0)
+        for c, want in (("videos", 1143), ("comments", 526259), ("threads", 385320), ("pairs", 125967)):
+            chk(f"Sec 3.5 {c}", int(total[0][c]), want, 0)
+    w("   <- paper Table 14 / Sec 3.5: 1,143 videos, 526,259 comments, 385,320 threads, 125,967 pairs")
+
+# 24 Table 15 annotation coverage
+head(24, "Table 15  annotation coverage per stratum (pairs = gold + LLM)")
+gold = load_jsonl("09_manual_annotations/gold_standard.jsonl") \
+    if Path("09_manual_annotations/gold_standard.jsonl").exists() else []
+gid = {r["PairID"] for r in gold}
+tg = tl = 0
+for t_, p_ in STRATA:
+    sub = [r for r in pairs if tp(r) == (t_, p_)]
+    g = sum(1 for r in sub if r["PairID"] in gid)
+    w(f"   {t_[:4]}x{p_:5} pairs={len(sub):5} gold={g:4} llm={len(sub)-g:5}")
+    chk(f"Table 15 gold {t_[:4]}x{p_}", g, 175, 0)
+    tg += g; tl += len(sub) - g
+w(f"   TOTAL      pairs={len(pairs):5} gold={tg:4} llm={tl:5}    <- paper: 7,277 / 700 / 6,577")
+chk("Table 15 gold total", tg, 700, 0)
+chk("Table 15 llm total", tl, 6577, 0)
+
+# 25 Sec 4.4 and Table 21 inter-annotator agreement
+head(25, "Sec 4.4 & Table 21  inter-annotator agreement (recomputed from A and Z)")
+
+
+def _kappa(x, y, quad=False):
+    cats = sorted(set(x) | set(y)); k = len(cats); n = len(x)
+    ix = {c: i for i, c in enumerate(cats)}
+    O = [[0.0] * k for _ in range(k)]
+    for a_, b_ in zip(x, y): O[ix[a_]][ix[b_]] += 1
+    rx = [sum(r) for r in O]; ry = [sum(O[i][j] for i in range(k)) for j in range(k)]
+    E = [[rx[i] * ry[j] / n for j in range(k)] for i in range(k)]
+    W = ([[((i - j) / (k - 1)) ** 2 for j in range(k)] for i in range(k)] if quad
+         else [[0.0 if i == j else 1.0 for j in range(k)] for i in range(k)])
+    num = sum(W[i][j] * O[i][j] for i in range(k) for j in range(k))
+    den = sum(W[i][j] * E[i][j] for i in range(k) for j in range(k))
+    return 1 - num / den if den else float("nan")
+
+
+def _alpha(ps):
+    """Krippendorff's alpha, nominal metric, two coders, no missing values."""
+    cnt = Counter()
+    for a_, b_ in ps: cnt[a_] += 1; cnt[b_] += 1
+    n = 2 * len(ps)
+    Do = sum(1 for a_, b_ in ps if a_ != b_) / len(ps)
+    De = 1 - sum(c * (c - 1) for c in cnt.values()) / (n * (n - 1))
+    return 1 - Do / De if De else float("nan")
+
+
+pa, pz = (Path("09_manual_annotations/gold_standard_a.jsonl"),
+          Path("09_manual_annotations/gold_standard_z.jsonl"))
+if pa.exists() and pz.exists():
+    A = {r["PairID"]: r for r in load_jsonl(str(pa))}
+    Z = {r["PairID"]: r for r in load_jsonl(str(pz))}
+    ids = sorted(set(A) & set(Z))
+    w(f"   overlapping pairs = {len(ids)}")
+
+    iq = [(float(A[i]["InteractionScore"]), float(Z[i]["InteractionScore"])) for i in ids
+          if A[i].get("InteractionScore") is not None and Z[i].get("InteractionScore") is not None]
+    x = [p[0] for p in iq]; y = [p[1] for p in iq]
+    ex = 100 * sum(1 for a_, b_ in iq if a_ == b_) / len(iq)
+    # printed to 4 dp
+    w(f"   IQ            exact={ex:.1f}%  kappa={_kappa(x, y):.4f}  "
+      f"quad={_kappa(x, y, True):.4f}  alpha={_alpha(iq):.4f}")
+    w(f"                 <- paper: 56.9% / 0.456 / 0.494 / 0.453")
+    chk("Sec 4.4 IQ exact", ex, 56.9, 0.06)
+    chk("Sec 4.4 IQ kappa", _kappa(x, y), 0.456, 0.001)
+    chk("Sec 4.4 IQ quad kappa", _kappa(x, y, True), 0.494, 0.001)
+    chk("Table 21 IQ alpha", _alpha(iq), 0.453, 0.001)
+
+    for nm, fld, wex, wk, wa in (("stance parent", "ParentStanceLabel", 87.0, 0.666, 0.665),
+                                 ("stance child", "StanceLabel", 87.4, 0.640, 0.639)):
+        p2 = [(A[i].get(fld), Z[i].get(fld)) for i in ids]
+        p2 = [(a_, b_) for a_, b_ in p2 if a_ is not None and b_ is not None]
+        x2 = [p[0] for p in p2]; y2 = [p[1] for p in p2]
+        e2 = 100 * sum(1 for a_, b_ in p2 if a_ == b_) / len(p2)
+        w(f"   {nm:13} exact={e2:.1f}%  kappa={_kappa(x2, y2):.4f}  alpha={_alpha(p2):.4f}"
+          f"    <- paper: {wex}% / {wk} / {wa}")
+        chk(f"Sec 4.4 {nm} exact", e2, wex, 0.06)
+        chk(f"Sec 4.4 {nm} kappa", _kappa(x2, y2), wk, 0.001)
+        chk(f"Table 21 {nm} alpha", _alpha(p2), wa, 0.001)
+
+    def _tset(r):
+        return frozenset(str(t).strip() for t in (r.get("Techniques") or []) if str(t).strip())
+
+    js, f1s, exs = [], [], 0
+    for i in ids:
+        sa, sz = _tset(A[i]), _tset(Z[i])
+        exs += (sa == sz)
+        u = len(sa | sz); inter = len(sa & sz)
+        js.append(1.0 if u == 0 else inter / u)
+        if not sa and not sz: f1s.append(1.0)
+        elif inter == 0: f1s.append(0.0)
+        else:
+            pr, rc = inter / len(sz), inter / len(sa)
+            f1s.append(2 * pr * rc / (pr + rc))
+    mj, mf, pe = sum(js) / len(js), sum(f1s) / len(f1s), 100 * exs / len(ids)
+    w(f"   propaganda    exact-set={pe:.1f}%  mean Jaccard={mj:.4f}  mean F1={mf:.4f}"
+      f"    <- paper: 19.3% / 0.335 / 0.392")
+    chk("Table 21 propaganda exact-set", pe, 19.3, 0.06)
+    chk("Sec 4.4 propaganda Jaccard", mj, 0.335, 0.001)
+    chk("Sec 4.4 propaganda F1", mf, 0.392, 0.001)
+
+    # Appendix prose names the three largest per-technique divergences between A and Z.
+    ca = Counter(t for i in ids for t in _tset(A[i]))
+    cz = Counter(t for i in ids for t in _tset(Z[i]))
+    top3 = sorted(set(ca) | set(cz), key=lambda t: -abs(cz[t] - ca[t]))[:3]
+    w("   largest A/Z technique divergences: "
+      + ", ".join(f"{t}({cz[t]-ca[t]:+})" for t in top3))
+    w("                 <- paper: Loaded_Language and Causal_Oversimplification (Z), Doubt (A)")
+    CHECKS.append((set(top3) == {"Loaded_Language", "Causal_Oversimplification", "Doubt"},
+                   "Table 22 prose: three largest A/Z divergences", sorted(top3),
+                   "Loaded_Language, Causal_Oversimplification, Doubt"))
+
+# 26 full stance cell matrix
+head(26, "Sec 5.1  all nine parent->child stance cells per topic")
+# Sec 5.1 calls Against-Against the most destructive configuration reported. The
+# full decomposition is printed so that claim stays checkable
+for t_ in TOPICS:
+    cells = []
+    for a_ in (0, 1, 2):
+        for c_ in (0, 1, 2):
+            g = [float(r["InteractionScore"]) for r in pairs
+                 if tp(r)[0] == t_ and r.get("ParentStanceLabel") == a_
+                 and r.get("StanceLabel") == c_ and r.get("InteractionScore") is not None]
+            if g: cells.append((NAME[a_][0] + "->" + NAME[c_][0], sum(g) / len(g), len(g)))
+    cells.sort(key=lambda z: z[1])
+    w(f"   {t_.upper()}  (most destructive first)")
+    for nm, m, n in cells:
+        w(f"      {nm:8} mean={m:+.3f}  n={n:5}")
+    w(f"      most destructive cell: {cells[0][0]}  (A->A is {'' if cells[0][0]=='A->A' else 'NOT '}the minimum)")
+
+# verdict 
+w("\n" + "=" * 70)
+w("SELF-CHECK")
+w("=" * 70)
+bad = [c for c in CHECKS if not c[0]]
+for ok, label, got, want in CHECKS:
+    if not ok: w(f"   FAIL  {label}: got {got}, paper says {want}")
+w(f"   {len(CHECKS) - len(bad)}/{len(CHECKS)} checks passed")
+if bad:
+    w("   *** the paper and the data disagree; fix one of them ***")
+
 Path("13_overview").mkdir(exist_ok=True)
 Path("13_overview/paper_numbers.txt").write_text("\n".join(L), encoding="utf-8")
 print("\n".join(L))
+raise SystemExit(1 if bad else 0)

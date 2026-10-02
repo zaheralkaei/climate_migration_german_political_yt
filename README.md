@@ -49,6 +49,12 @@ python 13_overview_report.py     # -> 13_overview/overview_report.txt (+ .json)
 python 13b_paper_numbers.py      # -> 13_overview/paper_numbers.txt
 ```
 
+Step 13b ends with a `SELF-CHECK` block that compares each value against the figure
+printed in the paper and **exits non-zero if any of them disagree**, so a number that
+drifts out of step with the publication fails the run rather than being left for the
+reader to spot. Its §21 counts every scraped comment, which takes a few minutes; set
+`SKIP_SLOW_CHECKS=1` to leave that one out while iterating.
+
 ### Tables and figures
 
 | Paper item | Content | Reproduced by |
@@ -66,16 +72,16 @@ python 13b_paper_numbers.py      # -> 13_overview/paper_numbers.txt
 | Table 11 | Technique prevalence per stratum | `paper_numbers.txt` §7; also `overview_report.txt` §4 |
 | Table 12 | Stance relation by topic, same-stance decomposed | `paper_numbers.txt` §8 |
 | Table 13 | Constructive-thread share by year and topic | `paper_numbers.txt` §10 |
-| Table 14 | Corpus composition by channel | `overview_report.txt` §1 (`08_pairs/statistics_report.csv`) |
-| Table 15 | Annotation coverage by stratum | `overview_report.txt` §3 |
+| Table 14 | Corpus composition by channel | `overview_report.txt` §1 (`08_pairs/statistics_report.csv`); `paper_numbers.txt` §23 re-adds the subtotals and totals and checks them |
+| Table 15 | Annotation coverage by stratum | `overview_report.txt` §3; `paper_numbers.txt` §24 |
 | Table 16 | Most-frequent techniques, corpus-wide | `paper_numbers.txt` §7; also `overview_report.txt` §4b |
 | Figure 1 | IQ distribution by party × topic | |
 | Table 17 | Stance definitions | `prompts/` |
 | Table 18 | Propaganda technique definitions | `prompts/` |
 | Table 19 | Constructive-thread share by year and stratum | `paper_numbers.txt` §10 |
 | Table 20 | Stance relation per party × topic | `paper_numbers.txt` §9 |
-| Table 21 | Inter-annotator agreement summary | `iaa_analysis.py` → `09_manual_annotations/iaa_results.json` |
-| Table 22 | (a) A/Z confusion matrix; (b) per-label LLM *F₁* | `iaa_results.json` (a); `evaluation_report.json` (b) |
+| Table 21 | Inter-annotator agreement summary | `iaa_analysis.py` → `09_manual_annotations/iaa_results.json`; `paper_numbers.txt` §25 recomputes every cell (incl. Krippendorff's α) straight from the two annotators' files |
+| Table 22 | (a) A/Z confusion matrix; (b) per-label LLM *F₁* | `iaa_results.json` (a); `evaluation_report.json` (b); the prose claim about the three largest A/Z technique divergences is checked in `paper_numbers.txt` §25 |
 
 ### Values reported in the paper
 

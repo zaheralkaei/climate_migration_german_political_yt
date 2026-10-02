@@ -1,6 +1,6 @@
 ======================================================================
 PAPER NUMBERS (supplement to overview_report.txt)
-Generated: 2026-09-27T13:28:40.089519+00:00
+Generated: 2026-10-02T04:31:11.310636+00:00
 pairs=7277  threads=2000
 ======================================================================
 
@@ -256,8 +256,94 @@ pairs=7277  threads=2000
    climate x AfD   same-stance n=1304  AA: 29.1% @ -0.404  NN: 70.1% @ -0.282  SS: 0.8% @ +0.150
    climate x Linke same-stance n=972  AA: 2.2% @ -0.071  NN: 89.1% @ -0.049  SS: 8.7% @ +0.124
    gap AfD-Linke = -0.280   composition explains 7%, severity explains 76%
-   <- paper: every configuration is harsher on AfD; NN alone -0.28 vs -0.05
+   <- paper: Against-Against and Neutral-Neutral are both harsher on AfD; NN alone -0.28 vs -0.05
+
+   climate   AA  AfD=-0.404 (n= 380)  Linke=-0.071 (n=  21)   harsher on AfD: yes
+   climate   NN  AfD=-0.282 (n= 914)  Linke=-0.049 (n= 866)   harsher on AfD: yes
+   climate   SS  AfD=+0.150 (n=  10)  Linke=+0.124 (n=  85)   harsher on AfD: NO
+   migration AA  AfD=-0.416 (n= 902)  Linke=-0.385 (n= 126)   harsher on AfD: yes
+   migration NN  AfD=-0.225 (n= 514)  Linke=-0.032 (n= 749)   harsher on AfD: yes
+   migration SS  AfD=+0.222 (n=   9)  Linke=+0.013 (n=  77)   harsher on AfD: NO
+   <- paper names only Against-Against and Neutral-Neutral here; Support-Support is the exception and is deliberately not claimed
 
    climate   opposing mean=+0.079 n=340 se=0.0529  95% CI [-0.024,+0.183]  excludes 0: False
    migration opposing mean=-0.072 n=583 se=0.0404  95% CI [-0.151,+0.007]  excludes 0: False
    climate vs migration opposing: Welch t=2.277 p=0.0231    <- paper: t = 2.28, p = 0.02
+
+======================================================================
+21. Sec 3.1  collection counts (counted from the raw stage outputs)
+======================================================================
+   AfD   videos =  10856
+   Linke videos =   3424
+   total videos = 14280    <- paper: 14,280 (10,856 AfD; 3,424 Die Linke)
+   comments: skipped (SKIP_SLOW_CHECKS set)
+   transcripts modeled = 12621    <- paper: 12,621
+
+======================================================================
+22. Sec 3.2  pseudonymized author identities per party namespace
+======================================================================
+   AfD namespace   = 386213
+   Linke namespace = 90117
+   sum (author-party pairs) = 476330    <- paper: 476,330 / 386,213 / 90,117
+   display names in both namespaces = 28852  ->  distinct names = 447478
+
+======================================================================
+23. Table 14  topic-relevant composition (report arithmetic + paper totals)
+======================================================================
+   total videos    =     1143  (report says     1143)
+   total comments  =   526259  (report says   526259)
+   total threads   =   385320  (report says   385320)
+   total pairs     =   125967  (report says   125967)
+   <- paper Table 14 / Sec 3.5: 1,143 videos, 526,259 comments, 385,320 threads, 125,967 pairs
+
+======================================================================
+24. Table 15  annotation coverage per stratum (pairs = gold + LLM)
+======================================================================
+   climxAfD   pairs= 1999 gold= 175 llm= 1824
+   climxLinke pairs= 1420 gold= 175 llm= 1245
+   migrxAfD   pairs= 1984 gold= 175 llm= 1809
+   migrxLinke pairs= 1874 gold= 175 llm= 1699
+   TOTAL      pairs= 7277 gold= 700 llm= 6577    <- paper: 7,277 / 700 / 6,577
+
+======================================================================
+25. Sec 4.4 & Table 21  inter-annotator agreement (recomputed from A and Z)
+======================================================================
+   overlapping pairs = 700
+   IQ            exact=56.9%  kappa=0.4558  quad=0.4940  alpha=0.4528
+                 <- paper: 56.9% / 0.456 / 0.494 / 0.453
+   stance parent exact=87.0%  kappa=0.6655  alpha=0.6647    <- paper: 87.0% / 0.666 / 0.665
+   stance child  exact=87.4%  kappa=0.6395  alpha=0.6391    <- paper: 87.4% / 0.64 / 0.639
+   propaganda    exact-set=19.3%  mean Jaccard=0.3353  mean F1=0.3912    <- paper: 19.3% / 0.335 / 0.392
+   largest A/Z technique divergences: Loaded_Language(+102), Causal_Oversimplification(+100), Doubt(-87)
+                 <- paper: Loaded_Language and Causal_Oversimplification (Z), Doubt (A)
+
+======================================================================
+26. Sec 5.1  all nine parent->child stance cells per topic
+======================================================================
+   CLIMATE  (most destructive first)
+      N->A     mean=-0.389  n=  211
+      A->A     mean=-0.387  n=  401
+      A->N     mean=-0.269  n=  431
+      N->N     mean=-0.169  n= 1780
+      S->A     mean=-0.118  n=  136
+      S->N     mean=+0.071  n=   85
+      S->S     mean=+0.126  n=   95
+      A->S     mean=+0.211  n=  204
+      N->S     mean=+0.230  n=   76
+      most destructive cell: N->A  (A->A is NOT the minimum)
+   MIGRATION  (most destructive first)
+      A->A     mean=-0.412  n= 1028
+      N->A     mean=-0.339  n=  360
+      S->A     mean=-0.244  n=  225
+      A->N     mean=-0.119  n=  378
+      N->N     mean=-0.110  n= 1263
+      S->N     mean=-0.052  n=   77
+      S->S     mean=+0.035  n=   86
+      A->S     mean=+0.036  n=  358
+      N->S     mean=+0.090  n=   83
+      most destructive cell: A->A  (A->A is the minimum)
+
+======================================================================
+SELF-CHECK
+======================================================================
+   55/55 checks passed
